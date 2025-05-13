@@ -1,0 +1,167 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Retail Optimization - Association Rule Mining</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <style>
+    body { padding: 20px; }
+    h2 { margin-top: 40px; }
+    pre { background-color: #f8f9fa; padding: 10px; border-radius: 5px; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1 class="text-center">Retail Optimization Using Association Rule Mining</h1>
+    <p><strong>Student Name:</strong> T.Suruthiliya</p>
+    <p><strong>Register Number:</strong> 422523104031</p>
+    <p><strong>Institution:</strong> University College Of Engineering, Villupuram</p>
+    <p><strong>Department:</strong> Information Technology</p>
+    <p><strong>Date Of Submission:</strong> 06-05-2025</p>
+
+    <h2>1. Problem Statement</h2>
+    <p>Retail businesses aim to understand customer purchasing behavior to improve sales, product placement, and marketing strategies. This project applies Association Rule Mining to find patterns in customer transactions.</p>
+
+    <h2>2. Abstract</h2>
+    <p>Using the Apriori algorithm, we analyzed transactional data to identify strong product associations. The findings help improve store layout, cross-selling, and customer targeting.</p>
+
+    <h2>3. System Requirements</h2>
+    <h4>Hardware</h4>
+    <ul>
+      <li>Minimum: i5/Ryzen 5, 8GB RAM, 256GB SSD</li>
+      <li>Recommended: i7/Ryzen 7, 16-32GB RAM, 512GB–1TB SSD</li>
+    </ul>
+    <h4>Software</h4>
+    <ul>
+      <li>Python, Jupyter, pandas, mlxtend, scikit-learn</li>
+      <li>Database (MySQL/PostgreSQL) and Big Data tools (Spark, Hadoop)</li>
+    </ul>
+
+    <h2>4. Objectives</h2>
+    <ul>
+      <li>Uncover product associations</li>
+      <li>Optimize product placement</li>
+      <li>Enhance targeted promotions</li>
+      <li>Improve inventory management</li>
+      <li>Support strategic decision-making</li>
+    </ul>
+
+    <h2>5. Workflow</h2>
+    <ol>
+      <li>Data Collection</li>
+      <li>Data Cleaning</li>
+      <li>EDA</li>
+      <li>Association Rule Mining</li>
+      <li>Visualization</li>
+    </ol>
+
+    <h2>6. Dataset Description</h2>
+    <p><strong>Source:</strong> UCI Online Retail Dataset</p>
+    <p><strong>Records:</strong> ~541,909</p>
+    <p><strong>Features:</strong> InvoiceNo, StockCode, Description, Quantity, InvoiceDate, UnitPrice, CustomerID, Country</p>
+
+    <h2>7. Data Preprocessing</h2>
+    <ul>
+      <li>Remove missing values and duplicates</li>
+      <li>Convert date and currency formats</li>
+      <li>One-hot encoding of categorical variables</li>
+      <li>Handle outliers using IQR/Z-score</li>
+    </ul>
+
+    <h2>8. Exploratory Data Analysis (EDA)</h2>
+    <ul>
+      <li>Most transactions involve low-quantity purchases</li>
+      <li>Top products dominate sales</li>
+      <li>Bulk buys are rare and mostly for cheap items</li>
+    </ul>
+
+    <h2>9. Key Insights</h2>
+    <ul>
+      <li>20% of products account for 80% of sales</li>
+      <li>Common pair: 'Tea Light Holders' & 'White Metal Lanterns'</li>
+      <li>Holiday sales spike in Nov–Dec</li>
+    </ul>
+
+    <h2>10. Recommendations</h2>
+    <h4>Short-Term</h4>
+    <ul>
+      <li>Product bundling</li>
+      <li>Optimized store layout</li>
+      <li>Targeted promotions</li>
+      <li>Online recommendations</li>
+      <li>Inventory adjustments</li>
+    </ul>
+    <h4>Long-Term</h4>
+    <ul>
+      <li>Loyalty programs</li>
+      <li>Dynamic pricing</li>
+      <li>Seasonal promotion strategies</li>
+      <li>Advanced analytics tools</li>
+    </ul>
+
+    <h2>11. Visualizations</h2>
+    <p>Includes: Bar Charts, Scatter Plots, Network Graphs for associations, Rule Metrics Table</p>
+
+    <h2>12. Final Deliverables</h2>
+    <ul>
+      <li>Jupyter Notebook</li>
+      <li>Interactive Dashboard (Plotly/Tableau)</li>
+      <li>Final Report</li>
+      <li>Insight Summary Sheet</li>
+    </ul>
+
+    <h2>13. Source Code (Python)</h2>
+    <pre>
+from flask import Flask, render_template, request
+import pandas as pd
+from mlxtend.frequent_patterns import apriori, association_rules
+
+app = Flask(__name__)
+
+def preprocess_data(df):
+    transactions = df['Items'].apply(lambda x: x.split(','))
+    all_items = sorted({item for sublist in transactions for item in sublist})
+    encoded_rows = [{item: (item in items) for item in all_items} for items in transactions]
+    return pd.DataFrame(encoded_rows)
+
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    if request.method == 'POST':
+        file = request.files['file']
+        if file:
+            df = pd.read_csv(file)
+            basket_df = preprocess_data(df)
+            frequent_itemsets = apriori(basket_df, min_support=0.2, use_colnames=True)
+            rules = association_rules(frequent_itemsets, metric="lift", min_threshold=1.0)
+            rules = rules[rules['confidence'] >= 0.5]
+            rules['antecedents'] = rules['antecedents'].apply(lambda x: ', '.join(list(x)))
+            rules['consequents'] = rules['consequents'].apply(lambda x: ', '.join(list(x)))
+            return render_template('results.html', tables=rules.to_dict(orient='records'))
+    return render_template('index.html')
+
+if __name__ == '__main__':
+    app.run(debug=True)
+    </pre>
+
+    <h2>14. Future Scope</h2>
+    <ul>
+      <li>Real-time pipeline using Kafka/Flink</li>
+      <li>Advanced visualization with D3.js</li>
+      <li>NLP-based sentiment analysis</li>
+      <li>CRM/Marketing automation integration</li>
+    </ul>
+
+    <h2>15. Team Members</h2>
+    <ul>
+      <li>T.Suruthiliya – Future Scope</li>
+      <li>V.J.Kavipriya – Visualization</li>
+      <li>R.Vanaja – Source Code</li>
+      <li>D.Priyavarshini – Data Preprocessing</li>
+      <li>G.Harini Pradeepa – Dataset Description</li>
+    </ul>
+  </div>
+</body>
+</html>
