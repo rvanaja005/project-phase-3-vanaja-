@@ -1,0 +1,95 @@
+
+
+
+---
+
+Option 1: Deploy on Localhost (Development)
+
+Steps:
+
+1. Clone or extract the app files into a directory.
+
+
+2. Create a virtual environment (optional but recommended):
+
+python -m venv venv
+source venv/bin/activate  # or venv\Scripts\activate on Windows
+
+
+3. Install dependencies:
+
+pip install -r requirements.txt
+
+
+4. Run the Flask app:
+
+python app.py
+
+
+5. Open http://127.0.0.1:5000 in your browser.
+
+
+
+
+---
+
+Option 2: Deploy on Heroku (Cloud Deployment - Free Tier Available)
+
+Files to Add:
+
+Procfile (no extension):
+
+web: python app.py
+
+runtime.txt (optional):
+
+python-3.10.8
+
+
+Steps:
+
+1. Install Heroku CLI and login:
+
+heroku login
+
+
+2. Initialize a Git repo:
+
+git init
+git add .
+git commit -m "Initial commit"
+
+
+3. Create the Heroku app:
+
+heroku create retail-arm-app
+
+
+4. Deploy:
+
+git push heroku master
+
+
+5. Open:
+
+heroku open
+
+
+
+
+---
+
+Option 3: Deploy on PythonAnywhere (Free Web Hosting for Flask)
+
+Steps:
+
+1. Sign up at pythonanywhere.com.
+
+
+2. Create a new Flask Web App.
+
+
+3. Upload your app files via the web UI or Git.
+
+
+4. Set the WSG
