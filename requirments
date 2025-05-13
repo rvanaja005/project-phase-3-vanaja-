@@ -1,0 +1,81 @@
+
+
+
+---
+
+1. System Requirements
+
+Minimum Hardware:
+
+CPU: Intel i5 or AMD Ryzen 5 (quad-core)
+
+RAM: 8 GB
+
+Storage: 256 GB SSD
+
+Network: Stable internet (for dependencies)
+
+
+Recommended Hardware:
+
+CPU: Intel i7 or Ryzen 7+ (multi-core)
+
+RAM: 16 GB or more (for large datasets)
+
+Storage: 512 GB+ SSD
+
+GPU: Not required for ARM; optional for future ML extensions
+
+
+
+---
+
+2. Software Requirements
+
+Operating System (any one):
+
+Windows 10/11
+
+macOS
+
+Linux (Ubuntu preferred)
+
+
+Environment Setup:
+
+Python Version: >=3.8 (recommended: Python 3.10+)
+
+Virtual Environment (optional but recommended): venv or conda
+
+
+Python Libraries (in requirements.txt)
+
+Install with:
+
+pip install -r requirements.txt
+
+Contents of requirements.txt:
+
+Flask>=2.0
+pandas>=1.4
+mlxtend>=0.22
+
+Additional Tools (optional but useful):
+
+Jupyter Notebook (for preprocessing/EDA)
+
+VS Code / PyCharm (IDE for editing)
+
+Postman (for API testing, if expanded)
+
+
+
+---
+
+3. Input Data Format
+
+CSV file with a column named Items containing comma-separated product names. Example:
+
+Items
+Bread,Butter,Jam
+Milk,Cereal,Sugar
