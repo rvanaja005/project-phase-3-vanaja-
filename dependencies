@@ -1,0 +1,37 @@
+# Step 1: Install dependencies (run this in your terminal or notebook)
+# pip install pandas mlxtend matplotlib seaborn
+
+# Step 2: Import libraries
+import pandas as pd
+from mlxtend.frequent_patterns import apriori, association_rules
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Step 3: Sample transaction dataset
+data = {
+    'Bread':    [1, 1, 0, 1, 0],
+    'Butter':   [1, 1, 1, 0, 1],
+    'Jam':      [0, 1, 1, 1, 1],
+    'Milk':     [1, 0, 1, 1, 1],
+    'Cereal':   [0, 1, 1, 0, 1]
+}
+
+df = pd.DataFrame(data)
+
+# Step 4: Generate frequent itemsets using Apriori
+frequent_itemsets = apriori(df, min_support=0.6, use_colnames=True)
+print("Frequent Itemsets:\n", frequent_itemsets)
+
+# Step 5: Generate association rules
+rules = association_rules(frequent_itemsets, metric="lift", min_threshold=1.0)
+rules = rules[rules['confidence'] >= 0.5]
+print("\nAssociation Rules:\n", rules[['antecedents', 'consequents', 'support', 'confidence', 'lift']])
+
+# Step 6: Visualize support vs confidence
+plt.figure(figsize=(8,5))
+sns.scatterplot(data=rules, x='support', y='confidence', size='lift', hue='lift', palette='viridis', legend=False)
+plt.title("Association Rules: Support vs Confidence")
+plt.xlabel("Support")
+plt.ylabel("Confidence")
+plt.grid(True)
+plt.show()
