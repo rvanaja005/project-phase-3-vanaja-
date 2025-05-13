@@ -1,0 +1,74 @@
+Here's a demo-ready Python code that walks through the key parts of your project — from data loading to Association Rule Mining with visualizations — using a Jupyter Notebook-style format.
+
+
+---
+
+Retail Optimization Using Association Rule Mining – Demo Code
+
+# 1. Import Libraries
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+from mlxtend.frequent_patterns import apriori, association_rules
+
+# 2. Load Dataset
+df = pd.read_excel("OnlineRetail.xlsx")  # Replace with your dataset path
+df.head()
+
+
+---
+
+# 3. Basic Preprocessing
+df.dropna(subset=['InvoiceNo', 'Description'], inplace=True)
+df = df[df['Quantity'] > 0]
+df = df[df['InvoiceNo'].astype(str).str.startswith('C') == False]
+df['InvoiceNo'] = df['InvoiceNo'].astype(str)
+df['Description'] = df['Description'].str.strip()
+df.head()
+
+
+---
+
+# 4. Create Basket Format (UK only)
+basket = (df[df['Country'] =="United Kingdom"]
+          .groupby(['InvoiceNo', 'Description'])['Quantity']
+          .sum().unstack().reset_index().fillna(0)
+          .set_index('InvoiceNo'))
+# Convert values to 1/0
+basket = basket.applymap(lambda x: 1 if x > 0 else 0)
+basket.head()
+
+
+---
+
+# 5. Apply Apriori Algorithm
+frequent_itemsets = apriori(basket, min_support=0.02, use_colnames=True)
+rules = association_rules(frequent_itemsets, metric="lift", min_threshold=1.0)
+rules = rules.sort_values(by='lift', ascending=False)
+rules[['antecedents', 'consequents', 'support', 'confidence', 'lift']].head()
+
+
+---
+
+# 6. Visualize Top 10 Rules by Lift
+top_rules = rules.nlargest(10, 'lift')
+plt.figure(figsize=(10, 6))
+sns.barplot(x='lift', y=top_rules.index, data=top_rules, orient='h')
+plt.title('Top 10 Association Rules by Lift')
+plt.xlabel('Lift')
+plt.show()
+
+
+---
+
+# 7. Create Network Graph (Optional)
+import networkx as nx
+
+G = nx.DiGraph()
+for _, row in top_rules.iterrows():
+    for ant in row['antecedents']:
+        for cons in row['consequents']:
+            G.add_edge(ant, cons, weight=row['lift'])
+
+plt.figure(figsize=(8,6))
+pos = nx
